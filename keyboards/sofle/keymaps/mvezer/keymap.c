@@ -1,5 +1,6 @@
 // Copyright 2023 QMK
 // SPDX-License-Identifier: GPL-2.0-or-later
+#include "caps_word.h"
 #include "keycodes.h"
 #include QMK_KEYBOARD_H
 
@@ -28,23 +29,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |  `   |   1  |   2  |   3  |   4  |   5  |                    |   6  |   7  |   8  |   9  |   0  |  `   |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * | ESC  |   Q  |   W  |   F  |   P  |   B  |                    |   J  |   L  |   U  |   Y  |   '  |   ;  |
+ * | ESC  |   Q  |   W  |   F  |   P  |   B  |                    |   J  |   L  |   U  |   Y  |   '  |   -  |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * | ESC  |   A  |   R  |   S  |   T  |   G  |-------.    ,-------|   M  |   N  |   E  |   I  |   O  |   ;  |
  * |------+------+------+------+------+------|  MUTE |    |       |------+------+------+------+------+------|
  * |LShift|   Z  |   X  |   C  |   D  |   V  |-------|    |-------|   K  |   H  |   ,  |   .  |   /  |RShift|
  * `-----------------------------------------/       /     \      \-----------------------------------------'
- *            | LGUI | LAlt |LOWER |Space | /  TAB  /       \Enter \  | Bspc |RAISE | RAlt | RGUI |
- *            |      |      |      |      |/       /         \      \ |      |      |      |      |
+ *            | LGUI | Caps |Space |  TAB | / RAISE /       \LOWER \  |Enter |Bkspc | RAlt | RGUI |
+ *            |      | word |/Raise|      |      |/       /         \      \ |      |      |      |      |
  *            `----------------------------------'           '------''---------------------------'
  */
 
 [_COLEMAK_DH] = LAYOUT(
   KC_GRV,   KC_1,           KC_2,           KC_3,           KC_4,         KC_5,                             KC_6,   KC_7,           KC_8,           KC_9,           KC_0,           KC_GRV,
-  KC_ESC,   KC_Q,           KC_W,           KC_F,           KC_P,         KC_B,                             KC_J,   KC_L,           KC_U,           KC_Y,           KC_QUOT,        KC_SCLN,
+  KC_ESC,   KC_Q,           KC_W,           KC_F,           KC_P,         KC_B,                             KC_J,   KC_L,           KC_U,           KC_Y,           KC_QUOT,        KC_MINUS,
   KC_ESC,   LGUI_T(KC_A),   LALT_T(KC_R),   LCTL_T(KC_S),   LSFT_T(KC_T), KC_G,                             KC_H,   RSFT_T(KC_N),   RCTL_T(KC_E),   RALT_T(KC_I),   RGUI_T(KC_O),   KC_SCLN,
   KC_LSFT,  KC_Z,           KC_X,           KC_C,           KC_D,         KC_V, KC_MUTE,         XXXXXXX,   KC_K,   KC_H,           KC_COMM,        KC_DOT,         KC_SLSH,        KC_RSFT,
-                 KC_LGUI,     KC_LALT,       TL_LOWR,         KC_SPC,       KC_TAB,                 KC_ENT,  KC_BSPC, TL_UPPR,       KC_RALT,        KC_RGUI
+                 KC_LGUI,     CW_TOGG,         LT(_RAISE,KC_SPC),       KC_TAB,       TL_UPPR,                 TL_LOWR, KC_ENT,  KC_BSPC,       KC_RALT,        KC_RGUI
 ),
 /*
  * QWERTY
@@ -96,8 +97,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * | Esc  | Ins  | Pscr | Menu |      |      |                    |      | PWrd |  Up  | NWrd | DLine| Bspc |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * | Tab  | LAt  | LCtl |LShift|      | Caps |-------.    ,-------|      | Left | Down | Rigth|  Del | Bspc |
- * |------+------+------+------+------+------|  MUTE  |    |       |------+------+------+------+------+------|
+ * | Tab  | LAt  | LCtl |LShift|      | Caps |-------.    ,-------|      | Left | Down |  Up  | Right| Bspc |
+ * |------+------+------+------+------+------|  MUTE |    |       |------+------+------+------+------+------|
  * |Shift | Undo |  Cut | Copy | Paste|      |-------|    |-------|      | LStr |      | LEnd |      | Shift|
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *            | LGUI | LAlt | LCTR |LOWER | /Enter  /       \Space \  |RAISE | RCTR | RAlt | RGUI |
@@ -107,7 +108,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_RAISE] = LAYOUT(
   _______, _______ , _______ , _______ , _______ , _______,                           _______,  _______  , _______,  _______ ,  _______ ,_______,
   _______,  KC_INS,  KC_PSCR,   KC_APP,  XXXXXXX, XXXXXXX,                        KC_PGUP, KC_PRVWD,   KC_UP, KC_NXTWD,C(KC_BSPC), KC_BSPC,
-  _______, KC_LALT,  KC_LCTL,  KC_LSFT,  XXXXXXX, KC_CAPS,                       KC_PGDN,  KC_LEFT, KC_DOWN, KC_RGHT,  KC_DEL, KC_BSPC,
+  _______, KC_LALT,  KC_LCTL,  KC_LSFT,  XXXXXXX, KC_CAPS,                       KC_PGDN,  KC_LEFT, KC_DOWN, KC_UP,  KC_RGHT, KC_BSPC,
   _______, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), XXXXXXX,  _______,       _______,  XXXXXXX, KC_LSTRT, XXXXXXX, KC_LEND,   XXXXXXX, _______,
                          _______, _______, _______, _______, _______,       _______, _______, _______, _______, _______
 ),
@@ -235,21 +236,21 @@ void print_status_narrow(void) {
     oled_write_P(PSTR("\n\n"), false);
     switch (get_highest_layer(layer_state)) {
         case 0:
-            oled_write_ln_P(PSTR("Clmk"), false);
+            oled_write_ln_P(PSTR("CLMK"), false);
             break;
         case 1:
-            oled_write_ln_P(PSTR("Qwrt"), false);
+            oled_write_ln_P(PSTR("QWRTY"), false);
             break;
         default:
-            oled_write_P(PSTR("Mod\n"), false);
+            oled_write_P(PSTR("mod\n"), false);
             break;
     }
-    oled_write_P(PSTR("\n\n"), false);
-    oled_write_ln_P(PSTR("LAYER"), false);
+    oled_write_ln_P(PSTR("-----"), false);
+    oled_write_P(PSTR("\n"), false);
     switch (get_highest_layer(layer_state)) {
         case 0:
         case 1:
-            oled_write_P(PSTR("Base\n"), false);
+            oled_write_P(PSTR("base\n"), false);
             break;
         case 2:
             oled_write_P(PSTR("Lower"), false);
@@ -264,8 +265,9 @@ void print_status_narrow(void) {
             oled_write_ln_P(PSTR("Undef"), false);
     }
     oled_write_P(PSTR("\n\n"), false);
-    led_t led_usb_state = host_keyboard_led_state();
-    oled_write_ln_P(PSTR("CPSLK"), led_usb_state.caps_lock);
+    oled_write_ln_P(PSTR("CAPS"), is_caps_word_on());
+    // led_t led_usb_state = host_keyboard_led_state();
+    // oled_write_ln_P(PSTR("CPSLK"), led_usb_state.caps_lock);
 }
 
 bool oled_task_kb(void) {
